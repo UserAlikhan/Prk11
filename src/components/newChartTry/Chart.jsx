@@ -1882,6 +1882,12 @@ class CandleStickChartWithText extends React.Component {
 									<button className="color" style={{backgroundColor: '#ffc107'}} onClick={() => this.onColorClick('#ffc107')}></button>
 									<button className="color" style={{backgroundColor: '#2196f3'}} onClick={() => this.onColorClick('#2196f3')}></button>
 								</div>
+
+								<div className="color-row">
+									<button className="color" style={{backgroundColor: '#9c27b0'}} onClick={() => this.onColorClick('#9c27b0')}></button>
+									<button className="color" style={{backgroundColor: '#ffc107'}} onClick={() => this.onColorClick('#ffc107')}></button>
+									<button className="color" style={{backgroundColor: '#2196f3'}} onClick={() => this.onColorClick('#2196f3')}></button>
+								</div>
 							</div>
 	
 							<div className="palitra">
