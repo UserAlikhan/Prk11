@@ -3,7 +3,7 @@ name: ReactJS_Pipeline
 on:
   push:
     branches:
-      - master
+      - main
 
 jobs:
   checkstyle_project:
