@@ -1245,15 +1245,24 @@ class CandleStickChartWithText extends React.Component {
 				draggable: false,
 				text: `BUY ORDER #${this.state.stateInteractiveYCoordinate.interactiveYCoordinate_1.length + 2}`
 			}
+			const biggestId = await axios.get(`http://localhost:3000/orders-buy/biggest_id`)
+			console.log('biggestId ', biggestId.data)
+			this.setState(prevState => ({
+				...prevState,
+				stateInteractiveYCoordinate: {
+					...prevState.stateInteractiveYCoordinate,
+					id_for_interactiveYCoordinate_1: [...this.state.stateInteractiveYCoordinate.id_for_interactiveYCoordinate_1, biggestId.data + 1]
+				}
+			}))
 
 			const response = await axios.post('http://localhost:3000/orders-buy', {
-				price: this.props.data[this.props.data.length - 1].close, 
-				margin: 15, 
-				order_amount: this.props.data[this.props.data.length - 1].close * 15, 
-				order_status: "active", 
-				order_object: buyObject, 
-				user_id: this.props.backtest.newSessionInfo.user_id, 
-				session_id: this.props.backtest.session_id
+					price: this.props.data[this.props.data.length - 1].close, 
+					margin: 15, 
+					order_amount: this.props.data[this.props.data.length - 1].close * 15, 
+					order_status: "active", 
+					order_object: buyObject, 
+					user_id: this.props.backtest.newSessionInfo.user_id, 
+					session_id: this.props.backtest.session_id
 			})
 
 			this.handleChoosePositionInteractiveYCoordinate(buyObject, 1)
@@ -1427,15 +1436,17 @@ class CandleStickChartWithText extends React.Component {
 				if(obj.text.split(' ')[0] === 'TAKE') {
 					const takeElement = this.state.stateInteractiveYCoordinate.interactiveYCoordinate_1.find(element => element.text === obj.text)
 					const takeElementIdx = this.state.stateInteractiveYCoordinate.interactiveYCoordinate_1.indexOf(takeElement)
-					console.log('fastForward ', takeElementIdx-1, this.state.stateInteractiveYCoordinate.id_for_interactiveYCoordinate_1)
+					console.log('fastForward ', takeElementIdx, this.state.stateInteractiveYCoordinate.id_for_interactiveYCoordinate_1[takeElementIdx-2])
 					const updatedTakeObject = {
 						order_object: JSON.stringify(takeElement),
 						order_status: 'take',
 						sell_price: obj.yValue,
 					}
-					console.log('fastForward ', (takeElementIdx + 1) / 3)
+
 					try {
-						axios.put(`http://localhost:3000/orders-buy/${(takeElementIdx + 1) / 3}`, updatedTakeObject)
+						axios.put(`http://localhost:3000/orders-buy/${this.state.stateInteractiveYCoordinate.id_for_interactiveYCoordinate_1[takeElementIdx-2]}`, 
+							updatedTakeObject
+						)
 
 						// Фильтруем список, оставляя только объекты, у которых text не равен text удаляемого объектаs
 						const newState = this.state.stateInteractiveYCoordinate.interactiveYCoordinate_1.filter(d => d.text.split(' ')[2] != obj.text.split(' ')[2])
